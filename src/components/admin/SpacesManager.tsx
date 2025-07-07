@@ -176,7 +176,7 @@ const SpacesManager: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Gerenciar Nossos Espaços</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Gerenciar Espaço</h2>
         <button
           onClick={handleCreate}
           className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all"

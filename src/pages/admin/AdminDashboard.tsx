@@ -37,7 +37,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     { id: 'hero-slides' as AdminSection, label: 'Slides Principais', icon: Images },
     { id: 'services' as AdminSection, label: 'Nossos Serviços', icon: Star },
     { id: 'budget' as AdminSection, label: 'Orçamento Personalizado', icon: Calendar },
-    { id: 'spaces' as AdminSection, label: 'Nossos Espaços', icon: MapPin },
+    { id: 'spaces' as AdminSection, label: 'Nosso Espaço', icon: MapPin },
     { id: 'equipments' as AdminSection, label: 'Equipamentos', icon: Package },
   ];
 
