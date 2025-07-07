@@ -151,7 +151,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                 {/* Pricing and actions */}
                 <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 md:p-6 rounded-2xl">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl md:text-3xl font-bold text-gray-800">{event.price}</span>
+                    <span className="text-2xl md:text-3xl font-bold text-gray-800">R${event.price}</span>
                     {event.popular && (
                       <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-2 rounded-full text-sm font-semibold">
                         Popular
