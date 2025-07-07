@@ -305,8 +305,8 @@ const ServicesManager: React.FC = () => {
                   placeholder="Descrição detalhada do serviço"
                 />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Preço
@@ -321,60 +321,37 @@ const ServicesManager: React.FC = () => {
                     placeholder="Ex: A partir de 1.200"
                   />
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Categoria
-                  </label>
-                  <select
-                    value={formData.categoria}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        categoria: e.target.value as
-                          | 'infantil'
-                          | 'adulto'
-                          | 'corporativo',
-                      }))
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                  >
-                    <option value="infantil">Infantil</option>
-                    <option value="adulto">Adulto</option>
-                    <option value="corporativo">Corporativo</option>
-                  </select>
-                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Imagem Principal
+                  Descrição
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleMainImageUpload}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                <textarea
+                  value={formData.descricao}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, descricao: e.target.value }))
+                  }
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                  placeholder="Descrição detalhada do serviço"
                 />
-                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
-                {formData.imagem_principal && (
-                  <img
-                    src={formData.imagem_principal}
-                    alt="Imagem Principal"
-                    className="mt-2 w-full h-48 object-cover rounded-xl"
-                  />
-                )}
               </div>
 
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="popular"
-                  checked={formData.popular}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, popular: e.target.checked }))
-                  }
-                  className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Preço
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.preco}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, preco: e.target.value }))
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    placeholder="Ex: A partir de 1.200"
+                  />
                 />
                 <label htmlFor="popular" className="text-sm font-medium text-gray-700">
                   Marcar como Popular
@@ -483,6 +460,223 @@ const ServicesManager: React.FC = () => {
                 </div>
               )}
               <div
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Categoria
+                  </label>
+                  <select
+                    value={formData.categoria}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        categoria: e.target.value as
+                          | 'infantil'
+                          | 'adulto'
+                          | 'corporativo',
+                      }))
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  >
+                    <option value="infantil">Infantil</option>
+                    <option value="adulto">Adulto</option>
+                    <option value="corporativo">Corporativo</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Imagem Principal
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleMainImageUpload}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                />
+                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
+                {formData.imagem_principal && (
+                  <img
+                    src={formData.imagem_principal}
+                    alt="Imagem Principal"
+                    className="mt-2 w-full h-48 object-cover rounded-xl"
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="popular"
+                  checked={formData.popular}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, popular: e.target.checked }))
+                  }
+                  className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                />
+                <label htmlFor="popular" className="text-sm font-medium text-gray-700">
+                  Marcar como Popular
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Galeria de Imagens
+                </label>
+                <div className="space-y-3">
+                  {formData.galeria.map((image, index) => (
+                    <div key={index} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleGalleryImageUpload(e, index)}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                      />
+                      <button
+                        onClick={() => removeGalleryImage(index)}
+                        className="w-full sm:w-auto px-3 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 flex items-center justify-center"
+                        type="button"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={addGalleryImage}
+                  className="mt-3 text-pink-600 hover:text-pink-700 text-sm font-medium"
+                  type="button"
+                >
+                  + Adicionar Imagem
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Características
+                </label>
+                <div className="space-y-3">
+                  {formData.caracteristicas.map((feature, index) => (
+                    <div key={index} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                      <input
+                        type="text"
+                        value={feature}
+                        onChange={(e) => updateFeature(index, e.target.value)}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                        placeholder="Característica do serviço"
+                      />
+                      <button
+                        onClick={() => removeFeature(index)}
+                        className="w-full sm:w-auto px-3 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 flex items-center justify-center"
+                        type="button"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={addFeature}
+                  className="mt-3 text-pink-600 hover:text-pink-700 text-sm font-medium"
+                  type="button"
+                >
+                  + Adicionar Característica
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+              <button
+                onClick={handleSave}
+                className="flex items-center justify-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition-all"
+                type="button"
+              >
+                <Save className="w-4 h-4" />
+                <span>Salvar</span>
+              </button>
+              <button
+                onClick={handleCancel}
+                className="flex items-center justify-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition-all"
+                type="button"
+              >
+                <X className="w-4 h-4" />
+                <span>Cancelar</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <div key={service.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="relative h-48">
+                <img
+                  src={service.imagem_principal}
+                  alt={service.titulo}
+                  className="w-full h-full object-cover"
+                />
+                {service.popular && (
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center space-x-1">
+                    <Star className="w-4 h-4" />
+                    <span>Popular</span>
+                  </div>
+                )}
+                <div
+                  className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold ${service.categoria === 'infantil'
+                    ? 'bg-pink-100 text-pink-800'
+                    : service.categoria === 'adulto'
+                      ? 'bg-purple-100 text-purple-800'
+                      : 'bg-blue-100 text-blue-800'
+                    }`}
+                >
+                  {service.categoria === 'infantil'
+                    ? 'Infantil'
+                    : service.categoria === 'adulto'
+                      ? 'Adulto'
+                      : 'Corporativo'}
+                </div>
+              </div>
+
+              <div className="p-4">
+                <h3 className="text-lg font-bold text-gray-800 mb-1">{service.titulo}</h3>
+                <p className="text-gray-600 text-sm mb-2">{service.subtitulo}</p>
+                <p className="text-lg font-bold text-gray-800 mb-4">R$ {service.preco}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {service.caracteristicas.map((feature, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 rounded-full bg-pink-100 text-pink-800 text-xs font-semibold"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={() => handleEdit(service)}
+                    className="p-2 rounded-xl bg-yellow-300 hover:bg-yellow-400 transition-all"
+                    title="Editar"
+                  >
+                    <Edit className="w-5 h-5 text-yellow-800" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(service.id)}
+                    className="p-2 rounded-xl bg-red-500 hover:bg-red-600 transition-all"
+                    title="Excluir"
+                  >
+                    <Trash2 className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  export default ServicesManager;
                 className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold ${service.categoria === 'infantil'
                   ? 'bg-pink-100 text-pink-800'
                   : service.categoria === 'adulto'
