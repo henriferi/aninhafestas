@@ -395,14 +395,6 @@ const ServicesManager: React.FC = () => {
                   Galeria de Imagens
                 </label>
                 {formData.galeria.map((image, index) => (
-                  <div key={index} className="flex items-center space-x-2 mb-2">
-                    <input
-                      type="url"
-                      value={image}
-                      onChange={(e) => updateGalleryImage(index, e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                      placeholder="URL da imagem"
-                    />
                     <input
                       type="file"
                       accept="image/*"
