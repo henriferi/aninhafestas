@@ -12,8 +12,8 @@ const Footer: React.FC = () => {
                 <span className="text-white font-bold text-xl">F</span>
               </div>
               <div>
-                <h3 id="contato" className="text-xl font-bold">Festa Mágica</h3>
-                <p className="text-gray-400 text-sm">Eventos & Festas</p>
+                <h3 id="contato" className="text-xl font-bold">Aninha Festas</h3>
+                <p className="text-gray-400 text-sm">Festas & Eventos</p>
               </div>
             </div>
             <p className="text-gray-400 mb-4">
