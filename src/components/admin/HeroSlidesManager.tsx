@@ -26,6 +26,14 @@ const HeroSlidesManager: React.FC = () => {
     imagem_url: '',
   });
 
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
   useEffect(() => {
     const fetchSlides = async () => {
       try {
@@ -58,13 +66,6 @@ const HeroSlidesManager: React.FC = () => {
     } finally {
       setUploading(false);
     }
-  };
-
-  const formRef = useRef<HTMLDivElement>(null);
-  const scrollToForm = () => {
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
   };
 
   const handleCreate = () => {
@@ -138,7 +139,6 @@ const HeroSlidesManager: React.FC = () => {
     }
   };
 
-
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este slide?')) return;
 
@@ -177,30 +177,51 @@ const HeroSlidesManager: React.FC = () => {
 
       {(isCreating || editingSlide) && (
         <div ref={formRef} className="bg-white rounded-2xl p-6 shadow-lg border border-pink-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              {isCreating ? 'Criar Novo Slide' : 'Editar Slide'}
+            </h3>
+            <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Título"
-                value={formData.titulo}
-                onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl"
-              />
-              <textarea
-                placeholder="Subtítulo"
-                value={formData.subtitulo}
-                onChange={(e) => setFormData({ ...formData, subtitulo: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl resize-none"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="file:px-4 file:py-2 file:bg-pink-500 file:text-white rounded-xl"
-              />
-              {uploading && <p className="text-sm text-gray-500">Enviando imagem...</p>}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
+                <input
+                  type="text"
+                  placeholder="Título do slide"
+                  value={formData.titulo}
+                  onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subtítulo</label>
+                <textarea
+                  placeholder="Subtítulo do slide"
+                  value={formData.subtitulo}
+                  onChange={(e) => setFormData({ ...formData, subtitulo: e.target.value })}
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Imagem</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                />
+                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
+              </div>
             </div>
+
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Preview</label>
               <div className="relative h-48 bg-gray-100 rounded-xl overflow-hidden">
                 {formData.imagem_url ? (
                   <img src={formData.imagem_url} alt="Preview" className="w-full h-full object-cover" />
@@ -212,12 +233,21 @@ const HeroSlidesManager: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="flex space-x-4 mt-6">
-            <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2 rounded-xl">
-              <Save className="w-4 h-4" /> Salvar
+            <button
+              onClick={handleSave}
+              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition-all"
+            >
+              <Save className="w-4 h-4" />
+              <span>Salvar</span>
             </button>
-            <button onClick={handleCancel} className="bg-gray-500 text-white px-4 py-2 rounded-xl">
-              <X className="w-4 h-4" /> Cancelar
+            <button
+              onClick={handleCancel}
+              className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition-all"
+            >
+              <X className="w-4 h-4" />
+              <span>Cancelar</span>
             </button>
           </div>
         </div>
@@ -237,11 +267,19 @@ const HeroSlidesManager: React.FC = () => {
             </div>
             <div className="p-4">
               <div className="flex space-x-2">
-                <button onClick={() => handleEdit(slide)} className="flex-1 bg-blue-500 text-white py-2 rounded-xl">
-                  <Edit className="w-4 h-4" /> Editar
+                <button
+                  onClick={() => handleEdit(slide)}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition-all"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
                 </button>
-                <button onClick={() => handleDelete(slide.id)} className="flex-1 bg-red-500 text-white py-2 rounded-xl">
-                  <Trash2 className="w-4 h-4" /> Excluir
+                <button
+                  onClick={() => handleDelete(slide.id)}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Excluir</span>
                 </button>
               </div>
             </div>

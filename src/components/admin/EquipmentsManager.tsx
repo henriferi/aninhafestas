@@ -187,7 +187,6 @@ const EquipmentsManager: React.FC = () => {
     }
   };
 
-
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
     try {
@@ -244,7 +243,8 @@ const EquipmentsManager: React.FC = () => {
                   type="text"
                   value={formData.nome}
                   onChange={e => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Nome do equipamento"
                 />
               </div>
 
@@ -254,7 +254,8 @@ const EquipmentsManager: React.FC = () => {
                   value={formData.descricao}
                   onChange={e => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                  placeholder="Descrição detalhada do equipamento"
                 />
               </div>
 
@@ -265,7 +266,7 @@ const EquipmentsManager: React.FC = () => {
                     type="text"
                     value={formData.faixa_etaria}
                     onChange={e => setFormData(prev => ({ ...prev, faixa_etaria: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     placeholder="Ex: 3-12 anos"
                   />
                 </div>
@@ -276,7 +277,7 @@ const EquipmentsManager: React.FC = () => {
                     type="text"
                     value={formData.capacidade}
                     onChange={e => setFormData(prev => ({ ...prev, capacidade: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     placeholder="Ex: 6 pessoas"
                   />
                 </div>
@@ -288,9 +289,9 @@ const EquipmentsManager: React.FC = () => {
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="file:px-4 file:py-2 file:bg-pink-500 file:text-white rounded-xl"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                 />
-                {uploading && <p className="text-sm text-gray-500">Enviando imagem…</p>}
+                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem…</p>}
                 {formData.imagem && (
                   <img
                     src={formData.imagem}
@@ -309,8 +310,8 @@ const EquipmentsManager: React.FC = () => {
                     type="text"
                     value={feature}
                     onChange={e => updateFeature(i, e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500"
-                    placeholder="Característica"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    placeholder="Característica do equipamento"
                   />
                   <button
                     onClick={() => removeFeature(i)}
@@ -334,7 +335,7 @@ const EquipmentsManager: React.FC = () => {
           <div className="flex space-x-4 mt-6">
             <button
               onClick={handleSave}
-              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl"
+              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition-all"
               type="button"
             >
               <Save className="w-4 h-4" />
@@ -342,7 +343,7 @@ const EquipmentsManager: React.FC = () => {
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl"
+              className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition-all"
               type="button"
             >
               <X className="w-4 h-4" />
@@ -396,14 +397,14 @@ const EquipmentsManager: React.FC = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleEdit(equipment)}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600"
+                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition-all"
                 >
                   <Edit className="w-4 h-4" />
                   <span>Editar</span>
                 </button>
                 <button
                   onClick={() => handleDelete(equipment.id)}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600"
+                  className="flex-1 flex items-center justify-center space-x-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>Excluir</span>

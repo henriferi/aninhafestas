@@ -5,10 +5,8 @@ import { getAuthHeaders } from '../../lib/apiHelpers';
 import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
 import { getUserId } from '../../lib/apiHelpers';
 
-
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const user_id = getUserId();
-
 
 interface Service {
   id: string;
@@ -191,7 +189,6 @@ const ServicesManager: React.FC = () => {
     }
   };
 
-
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
 
@@ -282,6 +279,7 @@ const ServicesManager: React.FC = () => {
                     setFormData((prev) => ({ ...prev, titulo: e.target.value }))
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Nome do serviço"
                 />
               </div>
 
@@ -296,6 +294,7 @@ const ServicesManager: React.FC = () => {
                     setFormData((prev) => ({ ...prev, subtitulo: e.target.value }))
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Subtítulo do serviço"
                 />
               </div>
 
@@ -310,6 +309,7 @@ const ServicesManager: React.FC = () => {
                   }
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                  placeholder="Descrição detalhada do serviço"
                 />
               </div>
 
@@ -325,7 +325,7 @@ const ServicesManager: React.FC = () => {
                       setFormData((prev) => ({ ...prev, preco: e.target.value }))
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                    placeholder="Ex: A partir de R$ 1.200"
+                    placeholder="Ex: A partir de 1.200"
                   />
                 </div>
 
@@ -361,9 +361,9 @@ const ServicesManager: React.FC = () => {
                   type="file"
                   accept="image/*"
                   onChange={handleMainImageUpload}
-                  className="file:px-4 file:py-2 file:bg-pink-500 file:text-white rounded-xl"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                 />
-                {uploading && <p className="text-sm text-gray-500">Enviando imagem...</p>}
+                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
                 {formData.imagem_principal && (
                   <img
                     src={formData.imagem_principal}
@@ -407,7 +407,7 @@ const ServicesManager: React.FC = () => {
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleGalleryImageUpload(e, index)}
-                      className="file:px-2 file:py-1 file:bg-pink-500 file:text-white rounded-xl"
+                      className="w-20 text-xs file:mr-1 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                     />
                     <button
                       onClick={() => removeGalleryImage(index)}
@@ -515,7 +515,7 @@ const ServicesManager: React.FC = () => {
             <div className="p-4">
               <h3 className="text-lg font-bold text-gray-800 mb-1">{service.titulo}</h3>
               <p className="text-gray-600 text-sm mb-2">{service.subtitulo}</p>
-              <p className="text-lg font-bold text-gray-800 mb-4">{service.preco}</p>
+              <p className="text-lg font-bold text-gray-800 mb-4">R$ {service.preco}</p>
 
               <div className="flex flex-wrap gap-2 mb-4">
                 {service.caracteristicas.map((feature, idx) => (
