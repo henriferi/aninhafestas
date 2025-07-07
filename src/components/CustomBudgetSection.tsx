@@ -88,15 +88,15 @@ const CustomBudgetSection: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-1">
-                500+
+                1000+
               </div>
               <div className="text-gray-600 text-sm">Festas Realizadas</div>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-600 bg-clip-text text-transparent mb-1">
-                98%
+                Satisfação
               </div>
-              <div className="text-gray-600 text-sm">Satisfação</div>
+              <div className="text-gray-600 text-sm">Garantida</div>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-500 to-green-600 bg-clip-text text-transparent mb-1">

@@ -61,11 +61,11 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-5 h-5 text-pink-500" />
-                <span className="text-gray-400">contato@festamagica.com</span>
+                <span className="text-gray-400">anacrisfesta@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="w-5 h-5 text-pink-500" />
-                <span className="text-gray-400">São Paulo, SP</span>
+                <span className="text-gray-400">Recife, PE</span>
               </div>
             </div>
             
@@ -79,9 +79,9 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-400 flex items-center justify-center space-x-2">
-            <span>© 2024 Festa Mágica. Feito com</span>
+            <span>© 2024 Aninha Festas</span>
             <Heart className="w-4 h-4 text-pink-500" />
-            <span>para criar momentos especiais.</span>
+            <span>Criado e mantido por - Henrique Fernandes</span>
           </p>
         </div>
       </div>
