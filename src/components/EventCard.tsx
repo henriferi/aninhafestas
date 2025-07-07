@@ -47,7 +47,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
             {event.category === 'infantil' ? 'Infantil' :
               event.category === 'adulto' ? 'Adulto' : 'Corporativo'}
           </span>
-          <span className="text-2xl font-bold text-gray-800">{event.price}</span>
+          <span className="text-2xl font-bold text-gray-800">R${event.price}</span>
         </div>
 
         <h3 className="text-xl font-bold text-gray-800 mb-2">{event.title}</h3>
