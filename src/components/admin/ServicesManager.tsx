@@ -270,7 +270,7 @@ const ServicesManager: React.FC = () => {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, titulo: e.target.value }))
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  className=" px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                   placeholder="Nome do serviço"
                 />
               </div>
@@ -285,7 +285,7 @@ const ServicesManager: React.FC = () => {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, subtitulo: e.target.value }))
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  className=" px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                   placeholder="Subtítulo do serviço"
                 />
               </div>
@@ -300,7 +300,7 @@ const ServicesManager: React.FC = () => {
                     setFormData((prev) => ({ ...prev, descricao: e.target.value }))
                   }
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                  className=" px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
                   placeholder="Descrição detalhada do serviço"
                 />
               </div>
@@ -336,7 +336,7 @@ const ServicesManager: React.FC = () => {
                           | 'corporativo',
                       }))
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    className=" px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                   >
                     <option value="infantil">Infantil</option>
                     <option value="adulto">Adulto</option>
@@ -353,7 +353,7 @@ const ServicesManager: React.FC = () => {
                   type="file"
                   accept="image/*"
                   onChange={handleMainImageUpload}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                  className="w-80 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                 />
                 {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
                 {formData.imagem_principal && (
@@ -392,7 +392,7 @@ const ServicesManager: React.FC = () => {
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleGalleryImageUpload(e, index)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                      className="w-24 flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                     />
                     <button
                       onClick={() => removeGalleryImage(index)}
