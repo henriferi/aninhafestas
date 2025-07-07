@@ -6,7 +6,6 @@ import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
 import { getUserId } from '../../lib/apiHelpers';
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const user_id = getUserId();
 
 interface Service {
   id: string;
@@ -466,6 +465,7 @@ const ServicesManager: React.FC = () => {
           </div>
         </div>
       )}
+
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (
