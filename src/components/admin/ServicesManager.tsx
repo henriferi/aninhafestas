@@ -216,13 +216,6 @@ const ServicesManager: React.FC = () => {
     setFormData((prev) => ({ ...prev, galeria: prev.galeria.filter((_, i) => i !== index) }));
   };
 
-  const updateGalleryImage = (index: number, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      galeria: prev.galeria.map((img, i) => (i === index ? value : img)),
-    }));
-  };
-
   const addFeature = () => {
     setFormData((prev) => ({ ...prev, caracteristicas: [...prev.caracteristicas, ''] }));
   };
@@ -395,11 +388,12 @@ const ServicesManager: React.FC = () => {
                   Galeria de Imagens
                 </label>
                 {formData.galeria.map((image, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-2">
                     <input
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleGalleryImageUpload(e, index)}
-                      className="w-20 text-xs file:mr-1 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
                     />
                     <button
                       onClick={() => removeGalleryImage(index)}
