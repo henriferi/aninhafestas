@@ -3,6 +3,7 @@ import axios from 'axios';
 import EventCard, { Event } from './EventCard';
 import EventModal from './EventModal';
 import { getAuthHeaders } from '../lib/apiHelpers';
+import PageLoading from './ui/PageLoading';
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
@@ -74,8 +75,8 @@ const ServicesSection: React.FC = () => {
   if (loading) {
     return (
       <section id="servicos" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4 text-center text-gray-500">
-          Carregando serviços...
+        <div className="container mx-auto px-4">
+          <PageLoading text="Carregando nossos serviços..." />
         </div>
       </section>
     );
@@ -85,7 +86,10 @@ const ServicesSection: React.FC = () => {
     return (
       <section id="servicos" className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 text-center text-gray-500">
-          Nenhum serviço disponível.
+          <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhum serviço disponível</h3>
+            <p className="text-gray-500">Em breve teremos novos serviços para você!</p>
+          </div>
         </div>
       </section>
     );

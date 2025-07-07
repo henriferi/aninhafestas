@@ -3,6 +3,10 @@ import { Plus, Edit, Trash2, Save, X, Upload } from 'lucide-react';
 import axios from 'axios';
 import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
 import { getAuthHeaders } from '../../lib/apiHelpers';
+import { useToast } from '../../hooks/useToast';
+import Loading from '../ui/Loading';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import PageLoading from '../ui/PageLoading';
 
 interface HeroSlide {
   id: string;
@@ -19,6 +23,10 @@ const HeroSlidesManager: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  const { success, error, warning } = useToast();
 
   const [formData, setFormData] = useState({
     titulo: '',
@@ -42,9 +50,10 @@ const HeroSlidesManager: React.FC = () => {
           { headers: getAuthHeaders(true) }
         );
         setSlides(response.data);
-      } catch (error) {
-        alert('Erro ao carregar slides');
-        console.error(error);
+        success('Slides carregados', 'Dados carregados com sucesso!');
+      } catch (err) {
+        error('Erro ao carregar slides', 'Não foi possível carregar os slides principais.');
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -61,8 +70,9 @@ const HeroSlidesManager: React.FC = () => {
     try {
       const imageUrl = await uploadImageToCloudinary(file, 'slides_p');
       setFormData((prev) => ({ ...prev, imagem_url: imageUrl }));
-    } catch (error) {
-      alert('Erro ao fazer upload da imagem.');
+      success('Upload concluído', 'Imagem enviada com sucesso!');
+    } catch (err) {
+      error('Erro no upload', 'Não foi possível enviar a imagem.');
     } finally {
       setUploading(false);
     }
@@ -85,6 +95,12 @@ const HeroSlidesManager: React.FC = () => {
   };
 
   const handleSave = async () => {
+    if (!formData.titulo.trim() || !formData.subtitulo.trim() || !formData.imagem_url.trim()) {
+      warning('Campos obrigatórios', 'Preencha todos os campos antes de salvar.');
+      return;
+    }
+
+    setSaving(true);
     const headers = getAuthHeaders(true);
 
     try {
@@ -99,6 +115,7 @@ const HeroSlidesManager: React.FC = () => {
 
         if (createdSlide && createdSlide.imagem_url) {
           setSlides([...slides, createdSlide]);
+          success('Slide criado', 'Novo slide adicionado com sucesso!');
         } else {
           console.warn('Slide criado, mas resposta não tem imagem_url. Refazendo fetch...');
           const refetch = await axios.get(
@@ -106,6 +123,7 @@ const HeroSlidesManager: React.FC = () => {
             { headers }
           );
           setSlides(refetch.data);
+          success('Slide criado', 'Novo slide adicionado com sucesso!');
         }
       } else if (editingSlide) {
         const response = await axios.patch(
@@ -120,6 +138,7 @@ const HeroSlidesManager: React.FC = () => {
           setSlides(slides.map(slide =>
             slide.id === updatedSlide.id ? updatedSlide : slide
           ));
+          success('Slide atualizado', 'Alterações salvas com sucesso!');
         } else {
           console.warn('Slide não retornado após update. Refazendo fetch...');
           const refetch = await axios.get(
@@ -127,6 +146,7 @@ const HeroSlidesManager: React.FC = () => {
             { headers }
           );
           setSlides(refetch.data);
+          success('Slide atualizado', 'Alterações salvas com sucesso!');
         }
       }
 
@@ -134,13 +154,15 @@ const HeroSlidesManager: React.FC = () => {
       setEditingSlide(null);
       setFormData({ titulo: '', subtitulo: '', imagem_url: '' });
     } catch (err) {
-      alert('Erro ao salvar slide.');
+      error('Erro ao salvar', 'Não foi possível salvar o slide.');
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este slide?')) return;
+    setDeleting(id);
 
     try {
       await axios.delete(
@@ -148,9 +170,12 @@ const HeroSlidesManager: React.FC = () => {
         { headers: getAuthHeaders(true) }
       );
       setSlides(slides.filter(slide => slide.id !== id));
-    } catch (error) {
-      alert('Erro ao excluir slide');
-      console.error(error);
+      success('Slide excluído', 'Slide removido com sucesso!');
+    } catch (err) {
+      error('Erro ao excluir', 'Não foi possível excluir o slide.');
+      console.error(err);
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -160,7 +185,7 @@ const HeroSlidesManager: React.FC = () => {
     setFormData({ titulo: '', subtitulo: '', imagem_url: '' });
   };
 
-  if (loading) return <p className="text-gray-500">Carregando slides...</p>;
+  if (loading) return <PageLoading text="Carregando slides..." />;
 
   return (
     <div className="space-y-6">
@@ -168,7 +193,8 @@ const HeroSlidesManager: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-800">Gerenciar Slides Principais</h2>
         <button
           onClick={handleCreate}
-          className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all"
+          disabled={saving}
+          className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
           <span>Novo Slide</span>
@@ -214,9 +240,15 @@ const HeroSlidesManager: React.FC = () => {
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                  disabled={uploading}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 disabled:opacity-50"
                 />
-                {uploading && <p className="text-sm text-gray-500 mt-2">Enviando imagem...</p>}
+                {uploading && (
+                  <div className="flex items-center space-x-2 mt-2">
+                    <LoadingSpinner size="sm" />
+                    <span className="text-sm text-gray-500">Enviando imagem...</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -237,14 +269,16 @@ const HeroSlidesManager: React.FC = () => {
           <div className="flex space-x-4 mt-6">
             <button
               onClick={handleSave}
-              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition-all"
+              disabled={saving || uploading}
+              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition-all disabled:opacity-50"
             >
-              <Save className="w-4 h-4" />
-              <span>Salvar</span>
+              {saving ? <LoadingSpinner size="sm" color="gray" /> : <Save className="w-4 h-4" />}
+              <span>{saving ? 'Salvando...' : 'Salvar'}</span>
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition-all"
+              disabled={saving}
+              className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition-all disabled:opacity-50"
             >
               <X className="w-4 h-4" />
               <span>Cancelar</span>
@@ -269,17 +303,23 @@ const HeroSlidesManager: React.FC = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleEdit(slide)}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition-all"
+                  disabled={saving || deleting === slide.id}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition-all disabled:opacity-50"
                 >
                   <Edit className="w-4 h-4" />
                   <span>Editar</span>
                 </button>
                 <button
                   onClick={() => handleDelete(slide.id)}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all"
+                  disabled={saving || deleting === slide.id}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all disabled:opacity-50"
                 >
-                  <Trash2 className="w-4 h-4" />
-                  <span>Excluir</span>
+                  {deleting === slide.id ? (
+                    <LoadingSpinner size="sm" color="gray" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  <span>{deleting === slide.id ? 'Excluindo...' : 'Excluir'}</span>
                 </button>
               </div>
             </div>

@@ -11,6 +11,8 @@ import SummaryStep from './budget-steps/SummaryStep';
 import PersonalInfoStep from './budget-steps/PersonalInfoStep';
 import { getAuthHeaders } from '../lib/apiHelpers';
 import { formatWhatsappMessage } from '../utils/buildWhatsappMessage';
+import { useToast } from '../hooks/useToast';
+import LoadingSpinner from './ui/LoadingSpinner';
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -21,6 +23,9 @@ const WHATSAPP_NUMBER = '5581986223012'; // seu número WhatsApp
 
 const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const { success, error, info } = useToast();
+  
   const [formData, setFormData] = useState<BudgetFormData>({
     eventType: '',
     location: '',
@@ -65,6 +70,7 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
         setAdditionalServices(servData);
       } catch (err) {
         console.error('Erro ao carregar dados:', err);
+        error('Erro ao carregar dados', 'Não foi possível carregar as opções do formulário.');
       }
     };
 
@@ -129,31 +135,43 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSubmit = () => {
-    const plainMessage = formatWhatsappMessage(formData, eventTypes, equipments, additionalServices);
-    const encoded = encodeURIComponent(plainMessage); // encode só aqui!
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
-    window.open(url, '_blank');
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    
+    try {
+      const plainMessage = formatWhatsappMessage(formData, eventTypes, equipments, additionalServices);
+      const encoded = encodeURIComponent(plainMessage);
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+      
+      // Simula um pequeno delay para mostrar o loading
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      window.open(url, '_blank');
+      
+      success('Solicitação enviada!', 'Entraremos em contato em breve via WhatsApp.');
+      onClose();
 
-    alert('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve via WhatsApp.');
-    onClose();
-
-    setCurrentStep(1);
-    setFormData({
-      eventType: '',
-      location: '',
-      selectedEquipments: [],
-      duration: 4,
-      guestCount: 50,
-      date: '',
-      additionalServices: [],
-      personalInfo: {
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-      },
-    });
+      setCurrentStep(1);
+      setFormData({
+        eventType: '',
+        location: '',
+        selectedEquipments: [],
+        duration: 4,
+        guestCount: 50,
+        date: '',
+        additionalServices: [],
+        personalInfo: {
+          name: '',
+          email: '',
+          phone: '',
+          message: '',
+        },
+      });
+    } catch (err) {
+      error('Erro ao enviar', 'Não foi possível enviar a solicitação. Tente novamente.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const renderStep = () => {
@@ -249,7 +267,8 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
             </div>
             <button
               onClick={onClose}
-              className="p-1 sm:p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+              disabled={submitting}
+              className="p-1 sm:p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors disabled:opacity-50"
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
@@ -263,7 +282,8 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
                 <div key={step.id} className="flex items-center flex-shrink-0">
                   <button
                     onClick={() => goToStep(step.id)}
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold transition-all hover:scale-110 ${currentStep > step.id
+                    disabled={submitting}
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold transition-all hover:scale-110 disabled:opacity-50 ${currentStep > step.id
                       ? 'bg-green-500 hover:bg-green-600'
                       : currentStep === step.id
                         ? 'bg-white text-pink-500 hover:bg-gray-100'
@@ -288,7 +308,8 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
                 <div key={step.id} className="flex items-center flex-1">
                   <button
                     onClick={() => goToStep(step.id)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all hover:scale-110 ${currentStep > step.id
+                    disabled={submitting}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all hover:scale-110 disabled:opacity-50 ${currentStep > step.id
                       ? 'bg-green-500 hover:bg-green-600'
                       : currentStep === step.id
                         ? 'bg-white text-pink-500 hover:bg-gray-100'
@@ -325,8 +346,8 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-between">
               <button
                 onClick={prevStep}
-                disabled={currentStep === 1}
-                className={`flex items-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${currentStep === 1
+                disabled={currentStep === 1 || submitting}
+                className={`flex items-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${currentStep === 1 || submitting
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
@@ -344,12 +365,15 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
 
               <button
                 onClick={nextStep}
-                disabled={!canProceed()}
-                className={`flex items-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${canProceed()
+                disabled={!canProceed() || submitting}
+                className={`flex items-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${canProceed() && !submitting
                   ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:from-pink-600 hover:to-purple-700'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   }`}
               >
+                {submitting && currentStep === 6 ? (
+                  <LoadingSpinner size="sm" color="gray" />
+                ) : null}
                 <span>{currentStep === 6 ? 'Finalizar' : 'Próximo'}</span>
                 <ChevronRight className="w-4 h-4" />
               </button>

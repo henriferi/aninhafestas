@@ -18,6 +18,8 @@ import ServicesManager from '../../components/admin/ServicesManager';
 import BudgetManager from '../../components/admin/BudgetManager';
 import SpacesManager from '../../components/admin/SpacesManager';
 import EquipmentsManager from '../../components/admin/EquipmentsManager';
+import ToastContainer from '../../components/ui/ToastContainer';
+import { useToast } from '../../hooks/useToast';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -28,6 +30,7 @@ type AdminSection = 'dashboard' | 'hero-slides' | 'services' | 'budget' | 'space
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { toasts, removeToast, success } = useToast();
 
   const menuItems = [
     { id: 'dashboard' as AdminSection, label: 'Dashboard', icon: LayoutDashboard },
@@ -41,6 +44,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const handleMenuClick = (sectionId: AdminSection) => {
     setActiveSection(sectionId);
     setIsSidebarOpen(false);
+    
+    if (sectionId !== 'dashboard') {
+      success('Seção carregada', `${menuItems.find(item => item.id === sectionId)?.label} carregado com sucesso!`);
+    }
   };
 
   const renderContent = () => {
@@ -201,6 +208,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 };

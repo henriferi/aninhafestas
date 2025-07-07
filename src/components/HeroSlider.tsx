@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import { getAuthHeaders } from '../lib/apiHelpers';
+import PageLoading from './ui/PageLoading';
 
 interface Slide {
   id: string;
@@ -16,6 +17,7 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const HeroSlider: React.FC = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const fetchSlides = async () => {
     try {
@@ -25,6 +27,8 @@ const HeroSlider: React.FC = () => {
       setSlides(res.data || []);
     } catch (err) {
       console.error('Erro ao buscar slides principais:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +52,27 @@ const HeroSlider: React.FC = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  if (loading) {
+    return (
+      <section id="inicio" className="relative h-screen overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="flex items-center justify-center h-full">
+          <PageLoading text="Carregando slides..." />
+        </div>
+      </section>
+    );
+  }
+
   if (slides.length === 0) {
-    return <div className="text-center p-10 text-gray-500">Carregando slides...</div>;
+    return (
+      <section id="inicio" className="relative h-screen overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center text-gray-600">
+            <h2 className="text-3xl font-bold mb-4">Bem-vindos à Aninha Festas</h2>
+            <p className="text-xl">Em breve teremos novos slides para você!</p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (

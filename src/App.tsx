@@ -5,10 +5,14 @@ import ServicesSection from './components/ServicesSection';
 import CustomBudgetSection from './components/CustomBudgetSection';
 import FacilitiesSection from './components/FacilitiesSection';
 import Footer from './components/Footer';
+import ToastContainer from './components/ui/ToastContainer';
+import { useToast } from './hooks/useToast';
 
 import AdminApp from './pages/admin/AdminApp';
 
 function App() {
+  const { toasts, removeToast } = useToast();
+
   return (
     <Router>
       <Routes>
@@ -23,6 +27,7 @@ function App() {
               <CustomBudgetSection />
               <FacilitiesSection />
               <Footer />
+              <ToastContainer toasts={toasts} onRemove={removeToast} />
             </div>
           }
         />
