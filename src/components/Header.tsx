@@ -34,7 +34,7 @@ const Header: React.FC = () => {
               </div>
             </div>
             <button className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
-              WhatSapp
+              WhatsApp
             </button>
           </div>
         </div>
