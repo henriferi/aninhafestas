@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-gray-400 mb-4">
-              Transformamos seus sonhos em realidade há mais de 10 anos, criando momentos únicos e inesquecíveis.
+              Transformamos seus sonhos em realidade há mais de 15 anos, criando momentos únicos e inesquecíveis.
             </p>
             <div className="flex space-x-4">
               <a
