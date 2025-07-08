@@ -46,11 +46,11 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div 
+      <div
         className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-modal-in shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -64,7 +64,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
         {/* Conteúdo com scroll */}
         <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
           <div className="p-4 md:p-6">
@@ -77,7 +77,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                     alt={event.title}
                     className="w-full h-64 md:h-80 object-cover rounded-2xl"
                   />
-                  
+
                   {event.gallery.length > 1 && (
                     <>
                       <button
@@ -86,7 +86,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                       >
                         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                       </button>
-                      
+
                       <button
                         onClick={nextImage}
                         className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all"
@@ -96,7 +96,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                     </>
                   )}
                 </div>
-                
+
                 {/* Thumbnails */}
                 {event.gallery.length > 1 && (
                   <div className="flex space-x-2 overflow-x-auto pb-2">
@@ -104,9 +104,8 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                       <button
                         key={index}
                         onClick={() => setCurrentImage(index)}
-                        className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                          index === currentImage ? 'border-pink-500' : 'border-gray-200'
-                        }`}
+                        className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all ${index === currentImage ? 'border-pink-500' : 'border-gray-200'
+                          }`}
                       >
                         <img
                           src={image}
@@ -118,23 +117,22 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                   </div>
                 )}
               </div>
-              
+
               {/* Informações do evento */}
               <div>
                 <div className="mb-6">
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4 ${
-                    event.category === 'infantil' ? 'bg-pink-100 text-pink-800' :
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4 ${event.category === 'infantil' ? 'bg-pink-100 text-pink-800' :
                     event.category === 'adulto' ? 'bg-purple-100 text-purple-800' :
-                    'bg-blue-100 text-blue-800'
-                  }`}>
-                    {event.category === 'infantil' ? 'Infantil' : 
-                     event.category === 'adulto' ? 'Adulto' : 'Corporativo'}
+                      'bg-blue-100 text-blue-800'
+                    }`}>
+                    {event.category === 'infantil' ? 'Infantil' :
+                      event.category === 'adulto' ? 'Adulto' : 'Corporativo'}
                   </span>
-                  
+
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">{event.subtitle}</h3>
                   <p className="text-gray-700 leading-relaxed">{event.description}</p>
                 </div>
-                
+
                 {/* Features */}
                 <div className="mb-6">
                   <h4 className="text-lg font-semibold text-gray-800 mb-3">O que está incluído:</h4>
@@ -147,7 +145,7 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                     ))}
                   </ul>
                 </div>
-                
+
                 {/* Pricing and actions */}
                 <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 md:p-6 rounded-2xl">
                   <div className="flex items-center justify-between mb-4">
@@ -158,17 +156,32 @@ const EventModal: React.FC<EventModalProps> = ({ event, isOpen, onClose }) => {
                       </span>
                     )}
                   </div>
-                  
+
                   <div className="space-y-3">
-                    <button className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                    <a
+                      href={`https://wa.me/5581988316145?text=${encodeURIComponent(
+                        `Olá! Gostaria de conversar sobre o serviço ${event.title}
+                        descrição: ${event.description},
+                        Que está incluso: ${event.features},
+                        Preço: R$${event.price}
+
+                        Aguardo retorno, obrigado(a)!`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full block text-center bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105"
+                    >
                       Solicitar Orçamento
-                    </button>
-                    
+                    </a>
+
                     <div className="flex space-x-3">
-                      <button className="flex-1 flex items-center justify-center space-x-2 bg-white border-2 border-pink-200 text-pink-600 py-3 rounded-xl font-semibold hover:bg-pink-50 transition-colors">
+                      <a
+                        href="tel:+5581988316145"
+                        className="flex-1 flex items-center justify-center space-x-2 bg-white border-2 border-pink-200 text-pink-600 py-3 rounded-xl font-semibold hover:bg-pink-50 transition-colors"
+                      >
                         <Phone className="w-4 h-4 md:w-5 md:h-5" />
                         <span className="text-sm md:text-base">Ligar</span>
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
