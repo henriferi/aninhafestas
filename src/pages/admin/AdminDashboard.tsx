@@ -20,6 +20,8 @@ import SpacesManager from '../../components/admin/SpacesManager';
 import EquipmentsManager from '../../components/admin/EquipmentsManager';
 import ToastContainer from '../../components/ui/ToastContainer';
 import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../../components/ui/ConfirmDialog';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -31,6 +33,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { toasts, removeToast, success } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const menuItems = [
     { id: 'dashboard' as AdminSection, label: 'Dashboard', icon: LayoutDashboard },
@@ -89,6 +92,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             </div>
           </div>
         );
+    }
+  };
+
+  const handleLogout = async () => {
+    const confirmed = await confirm({
+      title: 'Sair do Sistema',
+      message: 'Tem certeza que deseja sair do painel administrativo? Você precisará fazer login novamente para acessar.',
+      confirmText: 'Sair',
+      cancelText: 'Cancelar',
+      type: 'warning'
+    });
+
+    if (confirmed) {
+      onLogout();
     }
   };
 
@@ -157,7 +174,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
           {/* Logout Button */}
           <div className="p-4 border-t border-gray-200">
             <button
-              onClick={onLogout}
+              onClick={handleLogout}
               className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all"
             >
               <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -211,6 +228,18 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
 
       {/* Toast Container */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
     </div>
   );
 };

@@ -4,6 +4,9 @@ import axios from 'axios';
 import { getAuthHeaders } from '../../lib/apiHelpers';
 import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
 import { getUserId } from '../../lib/apiHelpers';
+import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../ui/ConfirmDialog';
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
@@ -26,6 +29,8 @@ const ServicesManager: React.FC = () => {
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const { success, error, warning } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const [formData, setFormData] = useState({
     titulo: '',
@@ -136,6 +141,28 @@ const ServicesManager: React.FC = () => {
   };
 
   const handleSave = async () => {
+    // Validação de campos obrigatórios
+    if (!formData.titulo.trim()) {
+      warning('Campo obrigatório', 'O título do serviço é obrigatório.');
+      return;
+    }
+    if (!formData.subtitulo.trim()) {
+      warning('Campo obrigatório', 'O subtítulo do serviço é obrigatório.');
+      return;
+    }
+    if (!formData.descricao.trim()) {
+      warning('Campo obrigatório', 'A descrição do serviço é obrigatória.');
+      return;
+    }
+    if (!formData.preco.trim()) {
+      warning('Campo obrigatório', 'O preço do serviço é obrigatório.');
+      return;
+    }
+    if (!formData.imagem_principal.trim()) {
+      warning('Campo obrigatório', 'A imagem principal do serviço é obrigatória.');
+      return;
+    }
+
     const headers = getAuthHeaders(true);
     const user_id = getUserId();
 
@@ -182,22 +209,32 @@ const ServicesManager: React.FC = () => {
         caracteristicas: [''],
         popular: false,
       });
+      success('Sucesso!', isCreating ? 'Serviço criado com sucesso!' : 'Serviço atualizado com sucesso!');
     } catch (err) {
-      alert('Erro ao salvar serviço');
+      error('Erro ao salvar', 'Não foi possível salvar o serviço.');
       console.error(err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+    const confirmed = await confirm({
+      title: 'Excluir Serviço',
+      message: 'Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita e removerá todas as informações relacionadas.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
 
     try {
       await axios.delete(`${API_BASE_URL}/servicos?id=eq.${id}`, {
         headers: getAuthHeaders(true),
       });
       setServices((prev) => prev.filter((s) => s.id !== id));
+      success('Excluído!', 'Serviço excluído com sucesso!');
     } catch (err) {
-      alert('Erro ao excluir serviço');
+      error('Erro ao excluir', 'Não foi possível excluir o serviço.');
       console.error(err);
     }
   };
@@ -465,6 +502,17 @@ const ServicesManager: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
 
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -3,6 +3,9 @@ import { Plus, Edit, Trash2, Save, X, Upload } from 'lucide-react';
 import axios from 'axios';
 import { getAuthHeaders, getUserId } from '../../lib/apiHelpers';
 import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
+import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../ui/ConfirmDialog';
 
 interface Space {
   id: string;
@@ -21,6 +24,8 @@ const SpacesManager: React.FC = () => {
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const { success, error, warning } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const [formData, setFormData] = useState({
     titulo: '',
@@ -108,6 +113,20 @@ const SpacesManager: React.FC = () => {
   };
 
   const handleSave = async () => {
+    // Validação de campos obrigatórios
+    if (!formData.titulo.trim()) {
+      warning('Campo obrigatório', 'O título do espaço é obrigatório.');
+      return;
+    }
+    if (!formData.descricao.trim()) {
+      warning('Campo obrigatório', 'A descrição do espaço é obrigatória.');
+      return;
+    }
+    if (!formData.imagem.trim()) {
+      warning('Campo obrigatório', 'A imagem do espaço é obrigatória.');
+      return;
+    }
+
     const headers = getAuthHeaders(true);
     const payload = {
       user_id: userId,
@@ -148,21 +167,32 @@ const SpacesManager: React.FC = () => {
       setIsCreating(false);
       setEditingSpace(null);
       setFormData({ titulo: '', descricao: '', imagem: '', caracteristicas: [''] });
+      success('Sucesso!', isCreating ? 'Espaço criado com sucesso!' : 'Espaço atualizado com sucesso!');
     } catch (err) {
-      alert('Erro ao salvar espaço');
+      error('Erro ao salvar', 'Não foi possível salvar o espaço.');
       console.error(err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este espaço?')) return;
+    const confirmed = await confirm({
+      title: 'Excluir Espaço',
+      message: 'Tem certeza que deseja excluir este espaço? Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+
     try {
       await axios.delete(`${API_BASE_URL}/nosso_espaco?id=eq.${id}`, {
         headers: getAuthHeaders(true),
       });
       setSpaces(prev => prev.filter(s => s.id !== id));
+      success('Excluído!', 'Espaço excluído com sucesso!');
     } catch (err) {
-      alert('Erro ao excluir espaço');
+      error('Erro ao excluir', 'Não foi possível excluir o espaço.');
       console.error(err);
     }
   };
@@ -330,6 +360,17 @@ const SpacesManager: React.FC = () => {
           );
         })}
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
     </div>
   );
 };

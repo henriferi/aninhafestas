@@ -3,6 +3,9 @@ import { Plus, Edit, Trash2, Save, X, Upload } from 'lucide-react';
 import axios from 'axios';
 import { getAuthHeaders, getUserId } from '../../lib/apiHelpers';
 import { uploadImageToCloudinary } from '../../lib/uploadImageToCloudinary';
+import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../ui/ConfirmDialog';
 
 interface Equipment {
   id: string;
@@ -23,6 +26,8 @@ const EquipmentsManager: React.FC = () => {
   const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const { success, error, warning } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -124,6 +129,28 @@ const EquipmentsManager: React.FC = () => {
   };
 
   const handleSave = async () => {
+    // Validação de campos obrigatórios
+    if (!formData.nome.trim()) {
+      warning('Campo obrigatório', 'O nome do equipamento é obrigatório.');
+      return;
+    }
+    if (!formData.descricao.trim()) {
+      warning('Campo obrigatório', 'A descrição do equipamento é obrigatória.');
+      return;
+    }
+    if (!formData.faixa_etaria.trim()) {
+      warning('Campo obrigatório', 'A faixa etária é obrigatória.');
+      return;
+    }
+    if (!formData.capacidade.trim()) {
+      warning('Campo obrigatório', 'A capacidade é obrigatória.');
+      return;
+    }
+    if (!formData.imagem.trim()) {
+      warning('Campo obrigatório', 'A imagem do equipamento é obrigatória.');
+      return;
+    }
+
     // Adiciona o header Prefer para receber o registro atualizado no response
     const headers = {
       ...getAuthHeaders(true),
@@ -181,21 +208,32 @@ const EquipmentsManager: React.FC = () => {
         imagem: '',
         caracteristicas: [''],
       });
+      success('Sucesso!', isCreating ? 'Equipamento criado com sucesso!' : 'Equipamento atualizado com sucesso!');
     } catch (err) {
-      alert('Erro ao salvar equipamento');
+      error('Erro ao salvar', 'Não foi possível salvar o equipamento.');
       console.error(err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
+    const confirmed = await confirm({
+      title: 'Excluir Equipamento',
+      message: 'Tem certeza que deseja excluir este equipamento? Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+
     try {
       await axios.delete(`${API_BASE_URL}/equipamentos?id=eq.${id}`, {
         headers: getAuthHeaders(true),
       });
       setEquipmentsList(prev => prev.filter(e => e.id !== id));
+      success('Excluído!', 'Equipamento excluído com sucesso!');
     } catch (err) {
-      alert('Erro ao excluir equipamento');
+      error('Erro ao excluir', 'Não foi possível excluir o equipamento.');
       console.error(err);
     }
   };
@@ -414,6 +452,17 @@ const EquipmentsManager: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
     </div>
   );
 };

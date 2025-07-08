@@ -3,6 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { getAuthHeaders, getUserId } from '../../lib/apiHelpers';
 import { EventTypeOption, AdditionalService } from '../../types/budget';
+import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../ui/ConfirmDialog';
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const userId = getUserId();
@@ -11,6 +14,8 @@ const BudgetManager: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'event-types' | 'services'>('event-types');
   const [eventTypesList, setEventTypesList] = useState<EventTypeOption[]>([]);
   const [servicesList, setServicesList] = useState<AdditionalService[]>([]);
+  const { success, error, warning } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const [editingEventType, setEditingEventType] = useState<EventTypeOption | null>(null);
   const [editingService, setEditingService] = useState<AdditionalService | null>(null);
@@ -117,6 +122,24 @@ const BudgetManager: React.FC = () => {
   };
 
   const handleSaveEventType = async () => {
+    // Validação de campos obrigatórios
+    if (!eventTypeForm.name.trim()) {
+      warning('Campo obrigatório', 'O nome do tipo de evento é obrigatório.');
+      return;
+    }
+    if (!eventTypeForm.description.trim()) {
+      warning('Campo obrigatório', 'A descrição do tipo de evento é obrigatória.');
+      return;
+    }
+    if (!eventTypeForm.icon.trim()) {
+      warning('Campo obrigatório', 'O ícone do tipo de evento é obrigatório.');
+      return;
+    }
+    if (!eventTypeForm.basePrice || Number(eventTypeForm.basePrice) < 0) {
+      warning('Campo obrigatório', 'O preço base deve ser um valor válido.');
+      return;
+    }
+
     const payload = {
       user_id: userId,
       nome: eventTypeForm.name,
@@ -190,16 +213,25 @@ const BudgetManager: React.FC = () => {
 
       setIsCreatingEventType(false);
       setEditingEventType(null);
+      success('Sucesso!', isCreatingEventType ? 'Tipo de evento criado com sucesso!' : 'Tipo de evento atualizado com sucesso!');
 
     } catch (err) {
-      alert('Erro ao salvar tipo de evento');
+      error('Erro ao salvar', 'Não foi possível salvar o tipo de evento.');
       console.error(err);
     }
   };
 
 
   const handleDeleteEventType = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este tipo de evento?')) return;
+    const confirmed = await confirm({
+      title: 'Excluir Tipo de Evento',
+      message: 'Tem certeza que deseja excluir este tipo de evento? Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
 
     try {
       await axios.delete(`${API_BASE_URL}/tipo_evento?id=eq.${id}`, {
@@ -207,8 +239,9 @@ const BudgetManager: React.FC = () => {
       });
 
       setEventTypesList(prev => prev.filter(et => et.id !== id));
+      success('Excluído!', 'Tipo de evento excluído com sucesso!');
     } catch (err) {
-      alert('Erro ao excluir tipo de evento');
+      error('Erro ao excluir', 'Não foi possível excluir o tipo de evento.');
       console.error(err);
     }
   };
@@ -231,6 +264,20 @@ const BudgetManager: React.FC = () => {
     scrollToForm('service');
   };
   const handleSaveService = async () => {
+    // Validação de campos obrigatórios
+    if (!serviceForm.name.trim()) {
+      warning('Campo obrigatório', 'O nome do serviço é obrigatório.');
+      return;
+    }
+    if (!serviceForm.description.trim()) {
+      warning('Campo obrigatório', 'A descrição do serviço é obrigatória.');
+      return;
+    }
+    if (!serviceForm.price || Number(serviceForm.price) < 0) {
+      warning('Campo obrigatório', 'O preço deve ser um valor válido.');
+      return;
+    }
+
     const payload = {
       user_id: userId,
       nome: serviceForm.name,
@@ -302,16 +349,25 @@ const BudgetManager: React.FC = () => {
 
       setIsCreatingService(false);
       setEditingService(null);
+      success('Sucesso!', isCreatingService ? 'Serviço criado com sucesso!' : 'Serviço atualizado com sucesso!');
 
     } catch (err) {
-      alert('Erro ao salvar serviço');
+      error('Erro ao salvar', 'Não foi possível salvar o serviço.');
       console.error(err);
     }
   };
 
 
   const handleDeleteService = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+    const confirmed = await confirm({
+      title: 'Excluir Serviço',
+      message: 'Tem certeza que deseja excluir este serviço adicional? Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
 
     try {
       await axios.delete(`${API_BASE_URL}/servicos_adicionais?id=eq.${id}`, {
@@ -319,8 +375,9 @@ const BudgetManager: React.FC = () => {
       });
 
       setServicesList(prev => prev.filter(service => service.id !== id));
+      success('Excluído!', 'Serviço excluído com sucesso!');
     } catch (err) {
-      alert('Erro ao excluir serviço');
+      error('Erro ao excluir', 'Não foi possível excluir o serviço.');
       console.error(err);
     }
   };
@@ -595,6 +652,17 @@ const BudgetManager: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
     </div>
   );
 };

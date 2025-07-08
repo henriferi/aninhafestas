@@ -7,6 +7,8 @@ import { useToast } from '../../hooks/useToast';
 import Loading from '../ui/Loading';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import PageLoading from '../ui/PageLoading';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from '../ui/ConfirmDialog';
 
 interface HeroSlide {
   id: string;
@@ -26,7 +28,8 @@ const HeroSlidesManager: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const { success, error, warning } = useToast();
+  const { success, error, warning, info } = useToast();
+  const { confirm, confirmState } = useConfirm();
 
   const [formData, setFormData] = useState({
     titulo: '',
@@ -95,6 +98,7 @@ const HeroSlidesManager: React.FC = () => {
   };
 
   const handleSave = async () => {
+    // Validação de campos obrigatórios
     if (!formData.titulo.trim() || !formData.subtitulo.trim() || !formData.imagem_url.trim()) {
       warning('Campos obrigatórios', 'Preencha todos os campos antes de salvar.');
       return;
@@ -162,6 +166,16 @@ const HeroSlidesManager: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
+    const confirmed = await confirm({
+      title: 'Excluir Slide',
+      message: 'Tem certeza que deseja excluir este slide principal? Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+
     setDeleting(id);
 
     try {
@@ -326,6 +340,17 @@ const HeroSlidesManager: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.options.title}
+        message={confirmState.options.message}
+        confirmText={confirmState.options.confirmText}
+        cancelText={confirmState.options.cancelText}
+        type={confirmState.options.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={confirmState.onCancel}
+      />
     </div>
   );
 };
