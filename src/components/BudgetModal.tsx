@@ -19,7 +19,7 @@ interface BudgetModalProps {
   onClose: () => void;
 }
 
-const WHATSAPP_NUMBER = '5581986223012'; // seu número WhatsApp
+const WHATSAPP_NUMBER = '5581988316145'; 
 
 const BudgetModal: React.FC<BudgetModalProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
