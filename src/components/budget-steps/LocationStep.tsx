@@ -30,10 +30,6 @@ const LocationStep: React.FC<LocationStepProps> = ({ selectedLocation, onSelect 
           <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-700">
             <div className="flex items-center space-x-2">
               <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
-              <span>Salões climatizados</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
               <span>Equipamentos inclusos</span>
             </div>
             <div className="flex items-center space-x-2">
