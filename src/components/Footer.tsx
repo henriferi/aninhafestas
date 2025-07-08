@@ -36,8 +36,6 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li className="text-gray-400 hover:text-white transition-colors">Festas Infantis</li>
               <li className="text-gray-400 hover:text-white transition-colors">Aniversários</li>
-              <li className="text-gray-400 hover:text-white transition-colors">Casamentos</li>
-              <li className="text-gray-400 hover:text-white transition-colors">Batizados</li>
               <li className="text-gray-400 hover:text-white transition-colors">Eventos Corporativos</li>
               <li className="text-gray-400 hover:text-white transition-colors">Formaturas</li>
             </ul>
