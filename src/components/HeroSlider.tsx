@@ -96,9 +96,9 @@ const HeroSlider: React.FC = () => {
               <p className="text-xl md:text-2xl mb-8 animate-slide-up animation-delay-300">
                 {slide.subtitulo}
               </p>
-              <button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 animate-slide-up animation-delay-600">
+              <a href='#servicos' className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 animate-slide-up animation-delay-600">
                 Conheça Nossos Serviços
-              </button>
+              </a>
             </div>
           </div>
         </div>
