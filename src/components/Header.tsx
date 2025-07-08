@@ -17,7 +17,7 @@ const Header: React.FC = () => {
               <p className="text-xs text-gray-600">Festas & Eventos</p>
             </div>
           </div>
-          
+
           <nav className="hidden md:flex space-x-8">
             <a href="#inicio" className="text-gray-700 hover:text-pink-500 transition-colors">Início</a>
             <a href="#servicos" className="text-gray-700 hover:text-pink-500 transition-colors">Serviços</a>
@@ -25,17 +25,22 @@ const Header: React.FC = () => {
             <a href="#espacos" className="text-gray-700 hover:text-pink-500 transition-colors">Espaços</a>
             <a href="#contato" className="text-gray-700 hover:text-pink-500 transition-colors">Contato</a>
           </nav>
-          
+
           <div className="flex items-center space-x-4">
             <div className="hidden lg:flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-1 text-gray-600">
                 <Phone className="w-4 h-4" />
-                <span>(11) 9999-9999</span>
+                <span>(81) 98831-6145</span>
               </div>
             </div>
-            <button className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+            <a
+              href="https://wa.me/5581988316145?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os%20da%20Aninha%20Festas!"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105"
+            >
               WhatsApp
-            </button>
+            </a>
           </div>
         </div>
       </div>
