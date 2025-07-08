@@ -98,7 +98,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const handleLogout = async () => {
     const confirmed = await confirm({
       title: 'Sair do Sistema',
-      message: 'Tem certeza que deseja sair do painel administrativo? Você precisará fazer login novamente para acessar.',
+      message: 'Tem certeza que deseja sair do painel administrativo?',
       confirmText: 'Sair',
       cancelText: 'Cancelar',
       type: 'warning'
