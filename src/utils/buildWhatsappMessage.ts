@@ -1,4 +1,5 @@
 import { BudgetFormData } from '../types/budget';
+import { getPhoneNumbers } from './phoneMask';
 
 export function formatWhatsappMessage(
   formData: BudgetFormData,
@@ -9,7 +10,7 @@ export function formatWhatsappMessage(
   let message = `Olá! Gostaria de solicitar um orçamento:\n\n`;
 
   message += `• Nome: ${formData.personalInfo.name}\n`;
-  message += `• Telefone: ${formData.personalInfo.phone}\n`;
+  message += `• Telefone: ${formData.personalInfo.phone} (${getPhoneNumbers(formData.personalInfo.phone)})\n`;
   if (formData.personalInfo.email) message += `• Email: ${formData.personalInfo.email}\n`;
   if (formData.personalInfo.message) message += `• Mensagem adicional: ${formData.personalInfo.message}\n`;
 

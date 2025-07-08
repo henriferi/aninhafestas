@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Phone, MessageSquare, Send, Shield } from 'lucide-react';
 import { BudgetFormData } from '../../types/budget';
+import { formatPhoneNumber, validatePhoneNumber } from '../../utils/phoneMask';
 
 interface PersonalInfoStepProps {
   personalInfo: BudgetFormData['personalInfo'];
@@ -9,7 +10,13 @@ interface PersonalInfoStepProps {
 }
 
 const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ personalInfo, onUpdate, onSubmit }) => {
-  const canSubmit = personalInfo.name.trim() !== '' && personalInfo.phone.trim() !== '';
+  const isPhoneValid = validatePhoneNumber(personalInfo.phone);
+  const canSubmit = personalInfo.name.trim() !== '' && personalInfo.phone.trim() !== '' && isPhoneValid;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedPhone = formatPhoneNumber(e.target.value);
+    onUpdate('phone', formattedPhone);
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -44,18 +51,31 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ personalInfo, onUpd
 
         {/* Telefone */}
         <div>
-          <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-3">
-            <Phone className="w-4 h-4 text-pink-500" />
-            <span>Telefone/WhatsApp *</span>
+          <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-3">
+            <div className="flex items-center space-x-2">
+              <Phone className="w-4 h-4 text-pink-500" />
+              <span>Telefone/WhatsApp *</span>
+            </div>
+            {personalInfo.phone && !isPhoneValid && (
+              <span className="text-xs text-red-500">Formato inválido</span>
+            )}
           </label>
           <input
             type="tel"
             value={personalInfo.phone}
-            onChange={(e) => onUpdate('phone', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent text-base"
-            placeholder="(11) 99999-9999"
+            onChange={handlePhoneChange}
+            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent text-base transition-colors ${
+              personalInfo.phone && !isPhoneValid
+                ? 'border-red-300 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-pink-500'
+            }`}
+            placeholder="81 99999-9999"
+            maxLength={13} // Máximo de caracteres com formatação
             required
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Formato: DDD + número (ex: 81 99999-9999)
+          </p>
         </div>
 
         {/* Email */}
@@ -119,13 +139,18 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ personalInfo, onUpd
 
           {!canSubmit && (
             <p className="text-sm text-gray-500 mt-3 text-center">
-              Preencha nome e telefone para enviar sua solicitação
+              {!personalInfo.name.trim() || !personalInfo.phone.trim() 
+                ? 'Preencha nome e telefone para enviar sua solicitação'
+                : !isPhoneValid 
+                ? 'Digite um telefone válido para continuar'
+                : 'Preencha os campos obrigatórios'
+              }
             </p>
           )}
 
           {canSubmit && (
             <p className="text-sm text-green-600 mt-3 text-center">
-              ✅ Pronto para enviar!
+              ✅ Pronto para enviar! Telefone válido: {personalInfo.phone}
             </p>
           )}
         </div>
