@@ -106,7 +106,7 @@ const CustomBudgetSection: React.FC = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-500 to-pink-600 bg-clip-text text-transparent mb-1">
-                10+
+                15+
               </div>
               <div className="text-gray-600 text-sm">Anos de Experiência</div>
             </div>
