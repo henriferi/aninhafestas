@@ -70,7 +70,14 @@ const Footer: React.FC = () => {
           <p className="text-gray-400 flex items-center justify-center space-x-2">
             <span>© 2025 Aninha Festas</span>
             <Heart className="w-4 h-4 text-pink-500" />
-            <span>Criado e mantido por - <a class="hover:underline decoration-wavy decoration-from-font decoration-gradient-to-r from-purple-500 via-purple-300 to-blue-500" target="blank" href="https://hfernandes.dev.br">Fernandes Dev
+            <span>Criado e mantido por - 
+              <a 
+                className="ml-1 text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text font-bold hover:from-purple-500 hover:via-pink-600 hover:to-blue-600 hover:scale-110 transform transition-all duration-300 hover:drop-shadow-lg relative group" 
+                target="_blank" 
+                href="https://hfernandes.dev.br"
+              >
+                Fernandes Dev
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
               </a>
             </span>
           </p>
