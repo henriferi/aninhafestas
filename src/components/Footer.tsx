@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
           <p className="text-gray-400 flex items-center justify-center space-x-2">
             <span>© 2025 Aninha Festas</span>
             <Heart className="w-4 h-4 text-pink-500" />
-            <span>Criado e mantido por - Henrique Fernandes</span>
+            <span>Criado e mantido por - <a href="https://hfernandes.dev.br">Fernandes Dev</a></span>
           </p>
         </div>
       </div>
