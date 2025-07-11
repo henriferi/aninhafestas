@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
             <Heart className="w-4 h-4 text-pink-500" />
             <span>Criado e mantido por - 
               <a 
-                className="ml-1 text-transparent bg-gradient-to-r from-blue-500 via-blue-700 to-blue-800 bg-clip-text font-bold hover:from-purple-500 hover:via-pink-600 hover:to-blue-600 hover:scale-110 transform transition-all duration-300 hover:drop-shadow-lg relative group" 
+                className="ml-1 text-transparent bg-gradient-to-r from-blue-500 via-blue-700 to-blue-500 bg-clip-text font-bold hover:from-green-500 hover:via-green-600 hover:to-green-600 hover:scale-110 transform transition-all duration-300 hover:drop-shadow-lg relative group" 
                 target="_blank" 
                 href="https://hfernandes.dev.br"
               >
