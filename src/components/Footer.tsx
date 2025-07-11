@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
                 href="https://hfernandes.dev.br"
               >
                 Fernandes Dev
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
               </a>
             </span>
           </p>
